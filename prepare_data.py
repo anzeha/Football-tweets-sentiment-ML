@@ -3,8 +3,13 @@ import pandas as pd
 def export_for_doccano(input_filename: str, output_filename: str):
     df = pd.read_csv(input_filename)
 
+    df = df.replace(r'\n', ' ', regex=True)
+
+
     with open(output_filename, 'a') as f:
-        dfAsString = df.iloc[:,1].to_string(header=False, index=False)
+        pd.set_option('display.max_colwidth', None)
+        dfAsString = df.to_string(columns=['tweet_text'],header=False, index=False, justify='center')
+        df.style.set_properties(subset=['tweet_text'],**{'text-align': 'left'})
         f.write(dfAsString)
 
 
