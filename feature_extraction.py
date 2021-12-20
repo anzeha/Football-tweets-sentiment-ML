@@ -1,14 +1,14 @@
 from typing import Iterable, Tuple
 import pandas as pd
 from pandas.core.frame import DataFrame
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer, TfidfVectorizer
 from nltk.corpus import stopwords as nltk_stopwords
 from sklearn.feature_extraction import text
 from prepare_data import players_stopwords
 import sys
 
 def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
-    cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range)
+    cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range, strip_accents='unicode')
 
     count_matrix = cv.fit_transform(sentences)
 
@@ -19,9 +19,24 @@ def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     return df
 
 def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
-    cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range)
+    cv = CountVectorizer(   stop_words=stopwords(), 
+                            ngram_range=ngram_range,
+                            strip_accents='unicode',
+                            min_df=0.2,
+                            max_df=0.9    
+                        )
 
     count_matrix = cv.fit_transform(sentences)
+
+    return count_matrix
+
+def bow_tfidf(sentences: Iterable[str], ngram_range: Tuple[int, int]):
+    tfidf = TfidfVectorizer(stop_words=stopwords(),
+                    ngram_range=ngram_range,
+                    
+                    )
+
+    count_matrix = tfidf.fit_transform(sentences)
 
     return count_matrix
 
