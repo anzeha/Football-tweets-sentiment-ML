@@ -3,8 +3,9 @@ import json
 from unidecode import unidecode
 import os
 
-PLAYERS_TXT_PATH = './data/players/euro_players.txt'
-PLAYERS_JSON_PATH = './data/players/euro_players.json'
+#WARNING: remove one dot from path if you want to run this file, path relative to /notebook folder
+PLAYERS_TXT_PATH = os.path.realpath('../data/players/euro_players.txt')
+PLAYERS_JSON_PATH = os.path.realpath('../data/players/euro_players.json')
 
 def export_for_doccano(input_filename: str, output_filename: str):
     df = pd.read_csv(input_filename)
@@ -56,13 +57,16 @@ def players_stopwords(player_txt_path: str = PLAYERS_TXT_PATH, players_json_path
     #get rid of duplicates
     splitted_players = list(dict.fromkeys(splitted_players))
 
+    #add country names to stop words
+    splitted_players = splitted_players + ['england', 'italy', 'germany', 'croatia']
+
     return splitted_players
 
 
 def main():
     print('main')
-    parse_players_to_json()    
-    players_stopwords()
+    #parse_players_to_json()    
+    #print(players_stopwords())
 
 if __name__ == "__main__":
     main()

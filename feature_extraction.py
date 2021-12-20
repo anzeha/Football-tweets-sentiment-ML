@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from nltk.corpus import stopwords as nltk_stopwords
 from sklearn.feature_extraction import text
 from prepare_data import players_stopwords
+import sys
 
 def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range)
@@ -18,7 +19,6 @@ def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     return df
 
 def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
-
     cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range)
 
     count_matrix = cv.fit_transform(sentences)
