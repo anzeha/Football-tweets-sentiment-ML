@@ -1,6 +1,9 @@
+import nltk
 import pandas as pd
 from pandas.core.frame import DataFrame
 import re
+from nltk.stem import WordNetLemmatizer
+nltk.download('wordnet')
 
 def read_annotated_tweets(input_filename: str):
     df = pd.read_csv(input_filename)
@@ -21,10 +24,17 @@ def clean_tweets(df: DataFrame):
     df['tweet_text'] =  df['tweet_text'].apply(lambda x: re.sub(r'\W',' ', str(x)))
     #to lowercase
     df['tweet_text'] =  df['tweet_text'].apply(lambda x: str(x).lower())
+    #remove standalone numbers
+    df['tweet_text'] =  df['tweet_text'].apply(lambda x: re.sub(r'(?:^| )(\d+)(?:$| )','', str(x)))
+    #remove string like "1st" "2nd" "1goal", "65mins"
+    df['tweet_text'] =  df['tweet_text'].apply(lambda x: re.sub(r'(\d+[A-Za-z]+)','', str(x)))
     #replace multiple spaces with one
     df['tweet_text'] =  df['tweet_text'].apply(lambda x: re.sub(r'\s+',' ', str(x)))
     #trim
     df['tweet_text'] =  df['tweet_text'].apply(lambda x: str(x).strip())
+    #lemmatize
+    lemmatizer = WordNetLemmatizer()
+    df['tweet_text'] = df['tweet_text'].apply(lambda x: lemmatizer.lemmatize(x))
 
 
 def main():
