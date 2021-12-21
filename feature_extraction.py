@@ -6,9 +6,10 @@ from nltk.corpus import stopwords as nltk_stopwords
 from sklearn.feature_extraction import text
 from prepare_data import players_stopwords
 import json
+from nltk.tokenize import TweetTokenizer
 
 def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
-    cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range, strip_accents='unicode')
+    cv = CountVectorizer(stop_words=stopwords(), ngram_range=ngram_range, strip_accents='unicode', tokenizer=tokenize)
 
     count_matrix = cv.fit_transform(sentences)
 
@@ -21,7 +22,8 @@ def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
 def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     cv = CountVectorizer(   stop_words=stopwords(), 
                             ngram_range=ngram_range,
-                            strip_accents='unicode', 
+                            strip_accents='unicode',
+                            tokenizer=tokenize 
                         )
 
     count_matrix = cv.fit_transform(sentences)
@@ -31,7 +33,7 @@ def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
 def bow_tfidf(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     tfidf = TfidfVectorizer(stop_words=stopwords(),
                     ngram_range=ngram_range,
-                    
+                    tokenizer=tokenize
                     )
 
     count_matrix = tfidf.fit_transform(sentences)
@@ -41,6 +43,7 @@ def bow_tfidf(sentences: Iterable[str], ngram_range: Tuple[int, int]):
 def bow_tfidf_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     tfidf = TfidfVectorizer(stop_words=stopwords(),
                     ngram_range=ngram_range,
+                    tokenizer=tokenize
                     )
 
     count_matrix = tfidf.fit_transform(sentences)
@@ -50,6 +53,10 @@ def bow_tfidf_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     df = pd.DataFrame(data=count_array,columns = tfidf.get_feature_names())
 
     return df
+
+def tokenize(text): 
+    tknzr = TweetTokenizer(reduce_len=True)
+    return tknzr.tokenize(text)
 
 def stopwords():
     return list(set( nltk_stopwords.words('english') ).union( set(text.ENGLISH_STOP_WORDS) ).union(players_stopwords()))
