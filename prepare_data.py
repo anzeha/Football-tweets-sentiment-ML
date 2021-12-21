@@ -60,6 +60,9 @@ def players_stopwords(player_txt_path: str = PLAYERS_TXT_PATH, players_json_path
     #add country names to stop words
     splitted_players = splitted_players + ['england', 'italy', 'germany', 'croatia']
 
+    #add "username" as all user tags were replaced with "username":  "@random123" -> "username"
+    splitted_players = splitted_players + ['username']
+
     return splitted_players
 
 

@@ -21,9 +21,7 @@ def bow_occurrences_df(sentences: Iterable[str], ngram_range: Tuple[int, int]):
 def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     cv = CountVectorizer(   stop_words=stopwords(), 
                             ngram_range=ngram_range,
-                            strip_accents='unicode',
-                            min_df=0.2,
-                            max_df=0.9    
+                            strip_accents='unicode', 
                         )
 
     count_matrix = cv.fit_transform(sentences)
