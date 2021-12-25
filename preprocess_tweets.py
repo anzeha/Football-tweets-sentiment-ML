@@ -3,7 +3,17 @@ import pandas as pd
 from pandas.core.frame import DataFrame
 import re
 from nltk.stem import WordNetLemmatizer
-nltk.download('wordnet')
+from nltk.corpus import wordnet
+from feature_extraction import tokenize
+
+wordnet_map = {
+    "N": wordnet.NOUN,
+    "V": wordnet.VERB,
+    "J": wordnet.ADJ,
+    "R": wordnet.ADV
+}
+
+LEMMATIZER = WordNetLemmatizer()
 
 def read_annotated_tweets(input_filename: str):
     df = pd.read_csv(input_filename)
@@ -33,16 +43,36 @@ def clean_tweets(df: DataFrame):
     #trim
     df['tweet_text'] =  df['tweet_text'].apply(lambda x: str(x).strip())
     #lemmatize
-    lemmatizer = WordNetLemmatizer()
-    df['tweet_text'] = df['tweet_text'].apply(lambda x: lemmatizer.lemmatize(x))
+    df['tweet_text'] = df['tweet_text'].apply(lambda x: lemmatize_tweet(x))
 
+def pos_tag_wordnet(text):
+    pos_tagged_text = nltk.pos_tag(text)
+
+    # map the pos tagging output with wordnet output
+    pos_tagged_text = [
+        (word, wordnet_map.get(pos_tag[0])) if pos_tag[0] in wordnet_map.keys()
+        else (word, wordnet.NOUN)
+        for (word, pos_tag) in pos_tagged_text
+    ]
+
+    return pos_tagged_text
+
+def lemmatize_tweet(tweet_text: str):
+    pos_tagged = pos_tag_wordnet(tokenize(tweet_text))
+
+    result = []
+    for x in pos_tagged:
+        lemmatized_word = LEMMATIZER.lemmatize(x[0], x[1])
+        result.append(lemmatized_word)
+
+    return ' '.join(result)
 
 def main():
-    df = read_annotated_tweets('./data/classified/england_italy_tweets_classified.csv')
+    df = read_annotated_tweets('./data/classified/england_italy_tweets_classified1.csv')
     clean_tweets(df)
 
     print(df)
-    
+
 
 if __name__ == "__main__":
     main()
