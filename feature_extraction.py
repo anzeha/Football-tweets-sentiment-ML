@@ -83,7 +83,8 @@ def main():
     dataset = ['havertz this is my python notebook']
 
     #print(bow_occurrences_df(dataset, (1,1)))
-    stopwords_to_json('./data/stopwords/stopwords.json')
+    #stopwords_to_json('./data/stopwords/stopwords.json')
+    
 
 if __name__ == "__main__":
     main()

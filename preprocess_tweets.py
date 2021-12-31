@@ -4,7 +4,7 @@ from pandas.core.frame import DataFrame
 import re
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
-from feature_extraction import tokenize
+from feature_extraction import tokenize, bow_tfidf_df
 
 wordnet_map = {
     "N": wordnet.NOUN,
@@ -68,10 +68,10 @@ def lemmatize_tweet(tweet_text: str):
     return ' '.join(result)
 
 def main():
-    df = read_annotated_tweets('./data/classified/england_italy_tweets_classified1.csv')
+    df = read_annotated_tweets('./data/raw/england_italy_all_tweets.csv')
     clean_tweets(df)
 
-    print(df)
+    ngrams = bow_tfidf_df(df['tweet_text'], (1,2))
 
 
 if __name__ == "__main__":
