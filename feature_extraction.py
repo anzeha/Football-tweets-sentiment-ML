@@ -33,7 +33,9 @@ def bow_occurrences(sentences: Iterable[str], ngram_range: Tuple[int, int]):
 def bow_tfidf(sentences: Iterable[str], ngram_range: Tuple[int, int]):
     tfidf = TfidfVectorizer(stop_words=stopwords(),
                     ngram_range=ngram_range,
-                    tokenizer=tokenize
+                    tokenizer=tokenize,
+                    #min_df=0.05,
+                    #max_df=0.95
                     )
 
     count_matrix = tfidf.fit_transform(sentences)
