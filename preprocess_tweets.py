@@ -16,7 +16,7 @@ wordnet_map = {
 LEMMATIZER = WordNetLemmatizer()
 
 def read_annotated_tweets(input_filename: str):
-    df = pd.read_csv(input_filename)
+    df = pd.read_csv(input_filename, engine='python', encoding='utf-8', error_bad_lines=False)
     df.rename(columns={'data':'tweet_text'}, inplace=True)
     #remove leading trailing withspaces, pandas alignment problem when printing df to file
     df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
